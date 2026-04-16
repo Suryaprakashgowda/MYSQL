@@ -1,0 +1,14 @@
+create table branch(
+    bid int unsigned,
+    bname varchar(20),
+    address varchar(50),
+    pincode int unsigned not null,
+    constraint u_pin unique(pincode),
+    constraint c_pin check(length(pincode)=6),
+    constraint P_bid primary key(bid));
+
+create table branch1(
+bid int unsigned not null primary key,
+bname varchar(20),
+address varchar(30),
+pincode int unsigned not null unique check(length(pincode)=6));
