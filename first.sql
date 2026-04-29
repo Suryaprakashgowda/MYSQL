@@ -7,3 +7,4 @@ CREATE TABLE ACESS(
 insert into acess values(1,"surya");
 insert into acess values(2,"surya");
 select * from acess;
+SHOW DATABASEs;

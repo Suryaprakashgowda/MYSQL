@@ -1,0 +1,8 @@
+create DATABASE ZOMATO;
+
+USE ZOMATO;
+
+SHOW TABLES;
+
+select * FROM CUSTOMERS;
+
