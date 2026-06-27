@@ -48,7 +48,7 @@ SELECT FNAME,STATUS,SAL\*12 FROM EMPS;
 
 
 
-## Expression:
+## Expression:-
 
 \--------------------------
 
@@ -3702,7 +3702,7 @@ WHERE YEAR(CURDATE())-YEAR(DOJ)>8;
 
 >IT IS USED TO EXTRACT INDIVUAL CHARACTERS FROM  GIVEN DATE-TIME EXPRESSION.
 
->WE CAN CHANGE THE FORMAT OF DATE AND TIME USING DATE\\\_FORMAT().
+>WE CAN CHANGE THE FORMAT OF DATE AND TIME USING DATE\\\\\\\_FORMAT().
 
 
 
@@ -3769,62 +3769,4 @@ TIME AM/PM :%r SELECT DATE\_FORMAT(NOW(),"%r"); ->10:05:47 PM
 
 
 SELECT DATE\_FORMAT(NOW(),"%y:%M:%d %W %h %p"); ->26:June:02 Tuesday 10 PM
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

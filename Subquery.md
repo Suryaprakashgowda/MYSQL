@@ -150,6 +150,68 @@ WHERE SAL=(SELECT SAL
 
 &#x09;					WHERE FNAME="FAIZAN") AND FNAME!='JAHNAVI';
 
+##### 
+
+##### \-> WQTD FNAME AND LNAME TOGETHER AS FULL NAME ALONG WITH SALARY IF EMPS FNAME 2ND CHARACTER IS A AND LNAME LAST 2ND CHARACTER IS ALSO A AND GETTING SALARY LESS THAN JAHNAVI??
+
+
+
+SELECT CONCAT(FNAME," ",LNAME) AS "FULL NAME",SAL AS SALARY
+
+FROM EMPS
+
+WHERE FNAME LIKE "\_A%" AND LNAME LIKE "%A\_" AND SAL<(SELECT SAL
+
+&#x20;                                                    FROM EMPS
+
+&#x20;                                                    WHERE FNAME="JAHNAVI");
+
+
+
+
+
+##### \-> WQTD DETAILS OF EMPS WHO ARE GETTING 2ND MAXIMUM SALARY???
+
+
+
+SELECT \*
+
+FROM EMPS
+
+WHERE SAL =(SELECT DISTINCT SAL
+
+&#x20;           FROM EMPS
+
+&#x20;           ORDER BY SAL DESC
+
+&#x20;           LIMIT 1 OFFSET 1);
+
+
+
+##### \-> WQTD FNAME,LNAME,SALARY,JOB AND LID IF EMPLOYEE IS WORKING IN THE LOCATION SAME AS SURESH LOCATION AND GETTING  SALARY MORE THAN PRIYA????
+
+
+
+SELECT FNAME,LNAME,SAL AS SALARY,JOB,LID
+
+FROM EMPS
+
+WHERE LID=(SELECT LID
+
+&#x20;          FROM EMPS
+
+&#x20;          WHERE FNAME="SURESH") AND SAL>(SELECT SAL
+
+&#x20;                                         FROM EMPS
+
+&#x20;                                         WHERE FNAME="PRIYA");
+
+
+
+
+
+
+
 
 
 
@@ -176,7 +238,29 @@ DOB < ->ELDER
 
 DOB > -> YOUNGER
 
+2003 < 2005
 
+ELDER MEANS < OPERATOR
+
+YOUNGER MEANS > OPERATOR
+
+
+
+
+
+##### \->WQTD CITY NAME OF THE EMPLOYEE KIRAN???
+
+
+
+SELECT CITY
+
+FROM LOCATIONS
+
+WHERE LID=(SELECT LID
+
+&#x20;          FROM EMPS
+
+&#x20;          WHERE FNAME="KIRAN");
 
 
 
@@ -308,7 +392,7 @@ IF INNER QUERY RETURNS MORE THAN ONE VALUE THEN WE CAN CONSIDER WUERY AS MULTI S
 
 
 
-CORRECT:- 
+CORRECT:-
 
 
 
@@ -342,6 +426,16 @@ WHERE ORDER\_ID IN (SELECT ORDER\_ID
 
 &#x09;		FROM ORDERS);
 
+##### OR
+
+
+
+SELECT \*
+
+FROM CUSTOMERS
+
+WHERE ORDER\_ID IS NOT NULL;
+
 
 
 
@@ -374,11 +468,53 @@ WHERE ORDER\_ID IN (SELECT ORDER\_ID
 
 &#x09;	   FROM ORDERS
 
-&#x09;	   WHERE ORDER\_ID IN ( SELECT ORDER\_ID 
+&#x09;	   WHERE ORDER\_ID IN ( SELECT ORDER\_ID
 
 &#x09;				FROM PAYMENTS
 
 &#x09;				WHERE STATUS="FAILED"));
+
+
+
+##### \-> WQTD NAME OF THE RESTAURANT WHICH HAS HIGHEST RATING??
+
+##### &#x20;  (INCLUDING TIE)
+
+
+
+
+
+SELECT NAME,RESTAURANT\_ID
+
+FROM RESTAURANTS
+
+WHERE RESTAURANT\_ID IN(SELECT RESTAURANT\_ID
+
+&#x20;                      FROM REVIEWS
+
+&#x20;                      WHERE RATING IN(SELECT MAX(RATING)
+
+&#x20;                                      FROM REVIEWS));
+
+
+
+SELECT NAME,RESTAURANT\_ID
+
+FROM RESTAURANTS
+
+WHERE RESTAURANT\_ID IN(SELECT RESTAURANT\_ID
+
+&#x20;                      FROM REVIEWS
+
+&#x20;                      WHERE RATING =(SELECT RATING
+
+&#x20;                                      FROM REVIEWS
+
+&#x20;                                      ORDER BY RATING DESC
+
+&#x20;                                      LIMIT 1));
+
+
 
 
 
@@ -456,7 +592,233 @@ WHERE SAL< ANY( SELECT SAL
 
 ##### 
 
+##### NOTE:
+
+##### \-----
+
+##### WE CANT USE SPECIAL OPERATORS TO CONNECT INNER QUERY IF INNER QUERY CONATINS LIMIT.
+
 ##### 
+
+##### 144.WQTD DETAILS OF EMPS WHO DELIVERED THE ITEM TO THE CUSTOMER WHO BELONGS TO WEST BENGAL STATE???
+
+
+
+SELECT \*
+
+FROM EMPS
+
+WHERE EID IN(SELECT EID
+
+&#x20;            FROM ORDERS
+
+&#x20;            WHERE STATUS="DELIVERED" AND ORDER\_ID IN(SELECT ORDER\_ID
+
+&#x20;                                                     FROM CUSTOMERS
+
+&#x20;                                                     WHERE LID IN(SELECT LID
+
+&#x20;                                                                  FROM LOCATIONS
+
+&#x20;                                                                  WHERE STATE="WESTBENGAL")));
+
+
+
+##### 
+
+##### EMPLOYEE AND MANAGER RELATIONSHIP:
+
+\--------------------------------------------------
+
+
+
+CASE 1:TO FIND MANAGER DETAILS
+
+\------------------------------
+
+
+
+INNER QUERY:MGR
+
+OUTER QUERY:EID
+
+
+
+##### 145.WQTD DETAILS OF MURALI'S MANAGER??
+
+
+
+SELECT \*
+
+FROM EMPS
+
+WHERE EID IN(SELECT MGR
+
+&#x20;            FROM EMPS
+
+&#x20;            WHERE FNAME="MURALI");
+
+
+
+##### 146.WQTD CITY NAME OF DIVYA'S MANAGER???
+
+
+
+SELECT CITY
+
+FROM LOCATIONS
+
+WHERE LID IN(SELECT LID
+
+&#x20;            FROM EMPS
+
+&#x20;            WHERE EID IN(SELECT MGR
+
+&#x20;                         FROM EMPS
+
+&#x20;                         WHERE FNAME="DIVYA"));
+
+
+
+##### 147.WQTD DETAILS OF AMAN'S MANAGER'S MANAGER???
+
+
+
+SELECT \*
+
+FROM EMPS
+
+WHERE EID IN(SELECT MGR
+
+&#x20;            FROM EMPS
+
+&#x20;            WHERE EID IN(SELECT MGR
+
+&#x20;                         FROM EMPS
+
+&#x20;                         WHERE FNAME="AMAN"));
+
+
+
+
+
+##### CASE 2:TO FIND EMPLOYEE DETAILS.
+
+\--------------------------------------------
+
+
+
+INNER QUERY:EID
+
+OUTER QUERY:MGR
+
+
+
+##### 148.WQTD DETAILS OF EMPLOYEES WHO ARE REPORTING TO KIRAN???
+
+
+
+SELECT \*
+
+FROM EMPS
+
+WHERE MGR IN(SELECT EID
+
+&#x20;            FROM EMPS
+
+&#x20;            WHERE FNAME="KIRAN");
+
+
+
+
+
+##### 149.WQTD DETAILS OF EMPS WHO ARE REPORTING TO ARJUN'S MANAGER???
+
+
+
+SELECT \*
+
+FROM EMPS
+
+WHERE MGR IN(SELECT EID
+
+&#x20;            FROM EMPS
+
+&#x20;            WHERE EID IN(SELECT MGR
+
+&#x20;                         FROM EMPS
+
+&#x20;                         WHERE FNAME="ARJUN"));
+
+
+
+##### 150.WQTD CITY AND STATE OF THE EMPS  WHO ARE REPORTING TO FAIZAN'S MANAGER'S MANAGER??
+
+
+
+
+
+SELECT CITY,STATE,FNAME
+
+FROM LOCATIONS
+
+WHERE LID IN(SELECT LID
+
+&#x20;            FROM EMPS
+
+&#x20;            WHERE MGR IN(SELECT EID
+
+&#x20;                         FROM EMPS
+
+&#x20;                         WHERE EID IN(SELECT MGR
+
+&#x20;                                      FROM EMPS
+
+&#x20;                                      WHERE EID IN(SELECT MGR
+
+&#x20;                                                   FROM EMPS
+
+&#x20;                                                   WHERE FNAME="FAIZAN"))));
+
+
+
+##### 151.WQTD DETAILS OF EMPS IF EMPS ARE GETTING SALARY LESS THAN ALL THE WAITERS??
+
+
+
+SELECT \*
+
+FROM EMPS
+
+WHERE SAL <ALL(SELECT SAL
+
+&#x20;              FROM EMPS
+
+&#x20;              WHERE JOB="WAITER");
+
+
+
+
+
+##### 136\. WQTD DEATILS OF EMPS WHO ARE GETTING SALARY LESS THAN ONE OF THE WAITER?
+
+
+
+SELECT \*
+
+FROM EMPS
+
+WHERE SAL< ANY( SELECT SAL
+
+&#x09;	FROM EMPS
+
+&#x09;	WHERE JOB="WAITER");
+
+
+
+
+
+
 
 ##### ALL AND ANY:
 
@@ -484,9 +846,79 @@ CLOUMN\_NAME/EXPRESSION  < / > / <= / >= ANY (V1,V2,V3,.... VN);
 
 
 
+##### ALL
 
+##### \---
+
+##### IT IS A MULTVALUE OPERATOR WHICH TAKES MULTIPLE VALUES AT THE RHS AND SINGLE VALUE AT THE LHS ALONG WITH RELATIONAL OPERATORS(</>/<=/>=)
 
 ##### 
+
+##### SYNTAX:
+
+##### \--------
+
+
+
+&#x20;          LHS                           RHS
+
+COLUMN\_NAME/EXPRESSION </>/<=/>= ALL(V1,V2,....VN)
+
+
+
+>IT WORKS ON AND CONDITION.
+
+
+
+A:1000  T
+
+B:2000  T
+
+C:10000 F
+
+
+
+SAL<ANY(2000,5000,10000)
+
+
+
+1000<ANY(
+
+2000<ANY(
+
+10000<ANY(
+
+
+
+##### ANY:
+
+##### \----
+
+##### IT IS A MULTIVALUE OPERATOR WHICH TAKES MULTIPLE VALUES AT THE RHS AND SINGLE VALUE AT THE LHS ALONG WITH RELATIONAL OPERATORS(</>/<=/>=)
+
+##### 
+
+##### SYNTAX:
+
+##### \-------
+
+
+
+COLUMN\_NAME/EXPRESSION </>/<=/>= ANY(V1,V2,.....VN)
+
+
+
+>IT WORKS ON OR CONDITION.
+
+
+
+DRAWBACK OF SUBQUERY:
+
+\---------------------
+
+>WE CANT RETRIEVE THE DATA FROM MULTIPLE TABLE AT A TIME.
+
+
 
 ##### 
 
@@ -507,6 +939,4 @@ CLOUMN\_NAME/EXPRESSION  < / > / <= / >= ANY (V1,V2,V3,.... VN);
 ##### 
 
 ##### &#x20;
-
-
 
